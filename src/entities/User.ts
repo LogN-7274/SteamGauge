@@ -1,13 +1,13 @@
-import { Entity, PrimaryColumn, Column, BeforeInsert, OneToOne, JoinColumn} from 'typeorm';
+import { BeforeInsert, Column, Entity, PrimaryColumn } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 
-@Entity
+@Entity()
 export class User {
   @PrimaryColumn()
   userId: string;
 
   @BeforeInsert()
-  generateId: void{
+  generateId(): void {
     this.userId = uuidv7();
   }
 

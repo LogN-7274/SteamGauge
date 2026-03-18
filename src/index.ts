@@ -15,6 +15,30 @@ app.use(express.static('public', { extensions: ['html'] }));
 
 // -- Routes --------------------------------------------------
 // Register your routes below this line
+// import { createGameProto } from './controllers/games.js';
+// app.post('/games', createGameProto);
+//TO BE CHANGED: will use the actual create when we can get the actual data
+
+// import { displayGames } from './controllers/games.js';
+// app.get('/games', displayGames);
+
+// import { createSaleHistoryProto } from './controllers/saleHistories.js';
+// app.post('/game/:gameId', createSaleHistoryProto);
+
+// import { displaySaleHistory } from './controllers/saleHistories.js';
+// app.get('/game/:gameId', displaySaleHistory);
+
+// import { createUser } from './controllers/users.js';
+// app.post('/users', createUser);
+
+// import { displayUser } from './controllers/users.js';
+// app.get('/users/:userId', displayUser);
+
+// import { displayWishlist } from './controllers/wishlists.js';
+// app.get('/users/:userId/wishlist', displayWishlist);
+
+// import { displayInterest } from './controllers/interetLists.js';
+// app.get('/users/:userId/interest', displayInterest);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
