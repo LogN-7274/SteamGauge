@@ -1,0 +1,25 @@
+import { Entity, PrimaryColumn, Column, BeforeInsert, OneToOne, JoinColumn} from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
+
+@Entity
+export class User {
+  @PrimaryColumn()
+  userId: string;
+
+  @BeforeInsert()
+  generateId: void{
+    this.userId = uuidv7();
+  }
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  passHash: string;
+
+  @Column()
+  passSalt: string;
+
+  @Column()
+  userName: string;
+}
