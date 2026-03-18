@@ -1,22 +1,16 @@
-import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { v7 as uuidv7 } from 'uuid';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Game } from './Game';
 
 @Entity()
 export class SaleHistory {
   @PrimaryColumn()
-  saleId: string;
-
-  @BeforeInsert()
-  generateId(): void {
-    this.saleId = uuidv7();
-  }
+  gameId: string;
 
   @Column()
   priceDate: string; //need to change to a date later
 
   @Column()
-  gameId: string;
+  price: number;
 
   @ManyToOne(() => Game, (game) => game.gameHistory)
   @JoinColumn({ name: 'gameId' })

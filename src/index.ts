@@ -28,8 +28,8 @@ app.use(express.static('public', { extensions: ['html'] }));
 // import { displaySaleHistory } from './controllers/saleHistories.js';
 // app.get('/game/:gameId', displaySaleHistory);
 
-// import { createUser } from './controllers/users.js';
-// app.post('/users', createUser);
+import { registerUser } from './controllers/userController.js';
+app.post('/users', registerUser);
 
 // import { displayUser } from './controllers/users.js';
 // app.get('/users/:userId', displayUser);
@@ -40,6 +40,7 @@ app.use(express.static('public', { extensions: ['html'] }));
 // import { displayInterest } from './controllers/interetLists.js';
 // app.get('/users/:userId/interest', displayInterest);
 
+//uncomment
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
 });

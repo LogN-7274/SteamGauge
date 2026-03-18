@@ -1,17 +1,12 @@
-import { Entity, PrimaryColumn, BeforeInsert } from 'typeorm';
-import { v7 as uuidv7 } from 'uuid';
+import { Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
+import { WishList } from './WishList';
 
 @Entity()
 export class InterestList {
   @PrimaryColumn()
-  interestId: string;
+  userId: string;
 
-  @BeforeInsert()
-  generateId(): void {
-    this.interestId = uuidv7();
-  }
-
-  // @ManyToMany(() => WishList)
-  //   @JoinTable()
-  //   wishLists: WishList[];  NOTE: not finished yet.
+  @ManyToMany(() => WishList)
+  @JoinTable()
+  wishLists: WishList[];
 }

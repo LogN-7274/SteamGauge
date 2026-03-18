@@ -18,8 +18,7 @@ export class User {
   passHash: string;
 
   @Column()
-  passSalt: string;
-
-  @Column()
   userName: string;
+
+  //need onetoone with wishlist, one to one with interest list
 }
