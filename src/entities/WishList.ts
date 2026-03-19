@@ -1,5 +1,5 @@
-import { Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
-import { Game } from './Game';
+import { Entity, JoinTable, ManyToMany, PrimaryColumn, Relation } from 'typeorm';
+import { Game } from './Game.js';
 
 @Entity()
 export class WishList {
@@ -8,5 +8,5 @@ export class WishList {
 
   @ManyToMany(() => Game)
   @JoinTable()
-  games: Game[];
+  games: Relation<Game[]>;
 }

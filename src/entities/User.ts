@@ -1,6 +1,6 @@
-import { BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryColumn, Relation } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
-import { WishList } from './WishList';
+import { WishList } from './WishList.js';
 
 @Entity()
 export class User {
@@ -24,5 +24,5 @@ export class User {
   //need onetoone with wishlist, one to one with interest list
   @OneToOne(() => WishList)
   @JoinColumn()
-  wishlist: WishList;
+  wishlist: Relation<WishList>;
 }

@@ -1,5 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { Game } from './Game';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import { Game } from './Game.js';
 
 @Entity()
 export class SaleHistory {
@@ -14,5 +14,5 @@ export class SaleHistory {
 
   @ManyToOne(() => Game, (game) => game.gameHistory)
   @JoinColumn({ name: 'gameId' })
-  game: Game;
+  game: Relation<Game>;
 }

@@ -1,5 +1,5 @@
-import { Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
-import { WishList } from './WishList';
+import { Entity, JoinTable, ManyToMany, PrimaryColumn, Relation } from 'typeorm';
+import { WishList } from './WishList.js';
 
 @Entity()
 export class InterestList {
@@ -8,5 +8,5 @@ export class InterestList {
 
   @ManyToMany(() => WishList)
   @JoinTable()
-  wishLists: WishList[];
+  wishLists: Relation<WishList[]>;
 }
