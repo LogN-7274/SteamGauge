@@ -31,16 +31,21 @@ app.use(express.static('public', { extensions: ['html'] }));
 import { registerUser } from './controllers/userController.js';
 app.post('/users', registerUser);
 
-// import { displayUser } from './controllers/users.js';
-// app.get('/users/:userId', displayUser);
+import { displayUser } from './controllers/userController.js';
+app.get('/users/:userId', displayUser);
 
-// import { displayWishlist } from './controllers/wishlists.js';
-// app.get('/users/:userId/wishlist', displayWishlist);
+import { displayWishlist } from './controllers/wishListController.js';
+app.get('/users/:userId/wishlist', displayWishlist);
 
-// import { displayInterest } from './controllers/interetLists.js';
+// import { displayInterest } from './controllers/interestListController.js';
 // app.get('/users/:userId/interest', displayInterest);
 
-//uncomment
+import { logOut } from './controllers/userController.js';
+app.delete('/logout', logOut);
+
+import { logIn } from './controllers/userController.js';
+app.post('/login', logIn);
+
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
 });

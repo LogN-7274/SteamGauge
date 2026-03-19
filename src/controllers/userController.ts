@@ -1,12 +1,12 @@
 // src/controllers/UserController.ts
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
-import { addUser, getUserById } from '../models/users.js';
+import { addUser, getUserByEmail, getUserById } from '../models/users.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
-import { createUserSchema, getUserIdSchema } from '../validators/users.js';
+import { getUserIdSchema, registerUserSchema } from '../validators/users.js';
 
-export async function registerUser(req: Request, res: Response): Promise<void> {
-  const result = createUserSchema.safeParse(req.body);
+async function registerUser(req: Request, res: Response): Promise<void> {
+  const result = registerUserSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json(result.error.flatten());
     return;
@@ -26,7 +26,7 @@ export async function registerUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export async function displayUser(req: Request, res: Response): Promise<void> {
+async function displayUser(req: Request, res: Response): Promise<void> {
   const reqId = getUserIdSchema.safeParse(req.params);
 
   if (!reqId.success) {
@@ -47,3 +47,44 @@ export async function displayUser(req: Request, res: Response): Promise<void> {
   res.status(200).json(foundUser);
   return;
 }
+
+async function logIn(req: Request, res: Response): Promise<void> {
+  const result = registerUserSchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json(result.error.flatten());
+    return;
+  }
+
+  const { email, passToHash } = result.data;
+
+  try {
+    const user = await getUserByEmail(email);
+    if (!user) {
+      req.session.logInAttempts = (req.session.logInAttempts ?? 0) + 1;
+      res.sendStatus(403);
+      return;
+    }
+
+    if (!(await argon2.verify(user.passHash, passToHash))) {
+      req.session.logInAttempts = (req.session.logInAttempts ?? 0) + 1;
+      res.sendStatus(403);
+      return;
+    }
+
+    await req.session.clearSession();
+    req.session.authenticatedUser = { userId: user.userId, email: user.email };
+    req.session.isLoggedIn = true;
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+}
+
+async function logOut(req: Request, res: Response): Promise<void> {
+  await req.session.clearSession();
+  res.sendStatus(204);
+}
+
+export { displayUser, logIn, logOut, registerUser };

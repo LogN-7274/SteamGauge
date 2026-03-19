@@ -21,4 +21,12 @@ async function addUser(userName: string, passwordHash: string, email: string): P
   return userRepository.save(newUser);
 }
 
-export { addUser, getAllUsers, getUserById };
+async function getUserByEmail(email: string): Promise<User | null> {
+  return userRepository.findOne({ where: { email } });
+}
+
+async function updateUserForCreate(user: User): Promise<User> {
+  return userRepository.save(user);
+}
+
+export { addUser, getAllUsers, getUserById, getUserByEmail, updateUserForCreate };
