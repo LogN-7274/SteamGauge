@@ -6,11 +6,11 @@ export class SaleHistory {
   @PrimaryColumn()
   gameId: string;
 
-  @Column()
-  priceDate: string; //need to change to a date later
+  @Column("simple-array") // typeORM documentation https://typeorm.io/docs/entity/entities/
+  priceDate: string[]; //need to change to date later
 
-  @Column()
-  price: number;
+  @Column("simple-array")
+  price: number[];
 
   @ManyToOne(() => Game, (game) => game.gameHistory)
   @JoinColumn({ name: 'gameId' })

@@ -23,10 +23,31 @@ app.use(express.static('public', { extensions: ['html'] }));
 // app.get('/games', displayGames);
 
 // import { createSaleHistoryProto } from './controllers/saleHistories.js';
-// app.post('/game/:gameId', createSaleHistoryProto);
+// app.post('/salehistory/:gameId', createSaleHistoryProto);
 
 // import { displaySaleHistory } from './controllers/saleHistories.js';
 // app.get('/game/:gameId', displaySaleHistory);
+
+import { createGame } from './controllers/gameController.js';
+app.post('/games', createGame)
+
+import { displayGame } from './controllers/gameController.js';
+app.get('/games/:gameId', displayGame)
+
+import { displayAllGames } from './controllers/gameController.js';
+app.get('/games', displayAllGames)
+
+import { createSaleHistory } from './controllers/saleHistoryController.js';
+app.post('/salehistory/:gameId', createSaleHistory)
+
+import { displaySaleHistory } from './controllers/saleHistoryController.js';
+app.get('/salehistory/:gameId', displaySaleHistory)
+
+import { createPrediction } from './controllers/predictionController.js';
+app.post('/predictions/:gameId', createPrediction)
+
+import { displayPrediction } from './controllers/predictionController.js';
+app.get('/predictions/:gameId', displayPrediction)
 
 import { registerUser } from './controllers/userController.js';
 app.post('/users', registerUser);

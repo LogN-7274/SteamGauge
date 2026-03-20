@@ -8,5 +8,5 @@ export class InterestList {
 
   @ManyToMany(() => WishList)
   @JoinTable()
-  wishLists: Relation<WishList>[];
+  wishLists: Relation<WishList[]>;
 }
