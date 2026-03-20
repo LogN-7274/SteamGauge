@@ -82,6 +82,7 @@ async function logIn(req: Request, res: Response): Promise<void> {
   }
 }
 
+// .
 async function logOut(req: Request, res: Response): Promise<void> {
   await req.session.clearSession();
   res.sendStatus(204);
