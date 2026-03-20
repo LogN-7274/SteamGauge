@@ -3,6 +3,11 @@ import { v7 as uuidv7 } from 'uuid';
 import { Prediction } from './Prediction.js';
 import { SaleHistory } from './SaleHistory.js';
 
+export enum gameType{
+  FPS = 'fps',
+  RPG = 'rpg',
+  INDIE = 'indie'
+}
 
 @Entity()
 export class Game {
@@ -19,6 +24,9 @@ export class Game {
 
   @Column()
   price: number;
+
+  @Column({type: 'enum'})
+  type: gameType;
 
   @OneToMany(() => SaleHistory, (history) => history.game)
   gameHistory: Relation<SaleHistory[]>;

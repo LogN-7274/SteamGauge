@@ -9,6 +9,6 @@ export const CreateSaleHistoryBodySchema = z.object({
   priceDate: z.array(z.string())
 })
 
-export const getSaleHistorySchema = z.object({
+export const GetSaleHistorySchema = z.object({
   gameId: z.string()
 })
