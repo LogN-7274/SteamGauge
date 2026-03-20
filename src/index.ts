@@ -58,8 +58,14 @@ app.get('/users/:userId', displayUser);
 import { displayWishlist } from './controllers/wishListController.js';
 app.get('/users/:userId/wishlist', displayWishlist);
 
+import { createWishList } from './controllers/wishListController.js';
+app.post('/users/:userId', createWishList);
+
 // import { displayInterest } from './controllers/interestListController.js';
 // app.get('/users/:userId/interest', displayInterest);
+
+// import { createInterest } from './controllers/interestListController.js';
+// app.post('/users/:userId/interest', createInterest);
 
 import { logOut } from './controllers/userController.js';
 app.delete('/logout', logOut);
