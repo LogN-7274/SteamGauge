@@ -3,11 +3,11 @@ import { SaleHistory } from "../entities/SaleHistory.js";
 
 const SaleHistoryRepository = AppDataSource.getRepository(SaleHistory);
 
-async function addSaleHistory(gameID: string, 
+async function addSaleHistory(gameId: string, 
                               price: number[], 
                               priceDate: string[]): Promise<SaleHistory> {
   const newSaleHistory = new SaleHistory();
-  newSaleHistory.gameId = gameID;
+  newSaleHistory.gameId = gameId;
   newSaleHistory.price = price;
   newSaleHistory.priceDate
 

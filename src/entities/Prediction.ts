@@ -4,7 +4,7 @@ import { Game } from './Game.js';
 @Entity()
 export class Prediction {
   @PrimaryColumn()
-  gameID: string;
+  gameId: string;
 
   @Column()
   predictionPrice: number;
