@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { addGame } from '../models/games.js';
+import { addGame, getGameById } from '../models/games.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
-import { CreateGameSchema } from '../validators/games.js';
+import { CreateGameSchema, GetGameSchema } from '../validators/games.js';
 
 async function createGame(req: Request, res: Response): Promise<void> {
   const result = CreateGameSchema.safeParse(req.body);
@@ -23,4 +23,25 @@ async function createGame(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { createGame };
+async function displayGame(req: Request, res: Response): Promise<void> {
+  const result = GetGameSchema.safeParse(req.params);
+  if (!result.success) {
+    res.status(400).json(result.error.flatten());
+    return;
+  }
+
+  const { gameId } = result.data;
+
+  const game = await getGameById(gameId);
+  if(!game){
+    console.log("Could not find game");
+    res.status(404).json({message: 'Game Not Found'});
+    return;
+  }
+
+  console.log('Successfully retrieved game');
+  res.status(200).json(game);
+  return;
+}
+
+export { createGame, displayGame };
