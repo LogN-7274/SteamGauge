@@ -9,7 +9,7 @@ async function addSaleHistory(gameId: string,
   const newSaleHistory = new SaleHistory();
   newSaleHistory.gameId = gameId;
   newSaleHistory.price = price;
-  newSaleHistory.priceDate
+  newSaleHistory.priceDate = priceDate;
 
   console.log('new Sale History added');
   return SaleHistoryRepository.save(newSaleHistory);
