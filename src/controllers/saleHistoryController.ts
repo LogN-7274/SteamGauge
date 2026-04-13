@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
-import { addSaleHistory, getSaleHistoryByGameId } from '../models/salehistory';
-import { parseDatabaseError } from '../utils/db-utils';
-import { CreateSaleHistoryBodySchema, CreateSaleHistoryParamsSchema, GetSaleHistorySchema } from '../validators/salehistory';
+import { addSaleHistory, getSaleHistoryByGameId } from '../models/salehistory.js';
+import { parseDatabaseError } from '../utils/db-utils.js';
+import {
+  CreateSaleHistoryBodySchema,
+  CreateSaleHistoryParamsSchema,
+  GetSaleHistorySchema,
+} from '../validators/salehistory.js';
 
 async function createSaleHistory(req: Request, res: Response): Promise<void> {
   const paramsResult = CreateSaleHistoryParamsSchema.safeParse(req.params);
@@ -14,11 +18,11 @@ async function createSaleHistory(req: Request, res: Response): Promise<void> {
   const { gameId } = paramsResult.data;
   const { price, priceDate } = bodyResult.data;
 
-  try{
+  try {
     const newSaleHistory = await addSaleHistory(gameId, price, priceDate);
     console.log(newSaleHistory);
     res.sendStatus(201);
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
@@ -35,9 +39,9 @@ async function displaySaleHistory(req: Request, res: Response): Promise<void> {
   const { gameId } = result.data;
 
   const saleHistory = await getSaleHistoryByGameId(gameId);
-  if(!saleHistory){
-    console.log("Could not find sale history");
-    res.status(404).json({message: 'Sale history Not Found'});
+  if (!saleHistory) {
+    console.log('Could not find sale history');
+    res.status(404).json({ message: 'Sale history Not Found' });
     return;
   }
 

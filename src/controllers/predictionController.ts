@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
-import { addPrediction, getPredictionByGameId } from '../models/predictions';
-import { parseDatabaseError } from '../utils/db-utils';
-import { CreatePredictionBodySchema, CreatePredictionParamsSchema, GetPredictionSchema } from '../validators/predictions';
+import { addPrediction, getPredictionByGameId } from '../models/predictions.js';
+import { parseDatabaseError } from '../utils/db-utils.js';
+import {
+  CreatePredictionBodySchema,
+  CreatePredictionParamsSchema,
+  GetPredictionSchema,
+} from '../validators/predictions.js';
 async function createPrediction(req: Request, res: Response): Promise<void> {
   const paramsResult = CreatePredictionParamsSchema.safeParse(req.params);
   const bodyResult = CreatePredictionBodySchema.safeParse(req.body);
@@ -13,11 +17,11 @@ async function createPrediction(req: Request, res: Response): Promise<void> {
   const { gameId } = paramsResult.data;
   const { predictionPrice, predictionDate } = bodyResult.data;
 
-  try{
+  try {
     const newPrediction = await addPrediction(gameId, predictionPrice, predictionDate);
     console.log(newPrediction);
     res.sendStatus(201);
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
@@ -34,9 +38,9 @@ async function displayPrediction(req: Request, res: Response): Promise<void> {
   const { gameId } = result.data;
 
   const prediction = await getPredictionByGameId(gameId);
-  if(!prediction){
-    console.log("Could not find prediction");
-    res.status(404).json({message: 'Prediction Not Found'});
+  if (!prediction) {
+    console.log('Could not find prediction');
+    res.status(404).json({ message: 'Prediction Not Found' });
     return;
   }
 

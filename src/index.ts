@@ -4,6 +4,7 @@ import { sessionMiddleware } from './sessionConfig.js';
 
 const app: Express = express();
 
+// bla
 app.use(sessionMiddleware); // Setup session management middleware
 app.use(express.json()); // Setup JSON body parsing middleware
 app.use(express.urlencoded({ extended: false })); // Setup urlencoded (HTML Forms) body parsing middleware
@@ -15,39 +16,26 @@ app.use(express.static('public', { extensions: ['html'] }));
 
 // -- Routes --------------------------------------------------
 // Register your routes below this line
-// import { createGameProto } from './controllers/games.js';
-// app.post('/games', createGameProto);
-//TO BE CHANGED: will use the actual create when we can get the actual data
+//bla
 
-// import { displayGames } from './controllers/games.js';
-// app.get('/games', displayGames);
-
-// import { createSaleHistoryProto } from './controllers/saleHistories.js';
-// app.post('/salehistory/:gameId', createSaleHistoryProto);
-
-// import { displaySaleHistory } from './controllers/saleHistories.js';
-// app.get('/game/:gameId', displaySaleHistory);
-
-import { createGame } from './controllers/gameController.js';
-app.post('/games', createGame)
-
-import { displayGame } from './controllers/gameController.js';
-app.get('/games/:gameId', displayGame)
+import { createGame, displayGame } from './controllers/gameController.js';
+app.post('/games', createGame);
+app.get('/games/:gameId', displayGame);
 
 import { displayAllGames } from './controllers/gameController.js';
-app.get('/games', displayAllGames)
+app.get('/games', displayAllGames);
 
 import { createSaleHistory } from './controllers/saleHistoryController.js';
-app.post('/salehistory/:gameId', createSaleHistory)
+app.post('/salehistory/:gameId', createSaleHistory);
 
 import { displaySaleHistory } from './controllers/saleHistoryController.js';
-app.get('/salehistory/:gameId', displaySaleHistory)
+app.get('/salehistory/:gameId', displaySaleHistory);
 
 import { createPrediction } from './controllers/predictionController.js';
-app.post('/predictions/:gameId', createPrediction)
+app.post('/predictions/:gameId', createPrediction);
 
 import { displayPrediction } from './controllers/predictionController.js';
-app.get('/predictions/:gameId', displayPrediction)
+app.get('/predictions/:gameId', displayPrediction);
 
 import { registerUser } from './controllers/userController.js';
 app.post('/users', registerUser);

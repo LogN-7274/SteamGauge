@@ -16,6 +16,6 @@ export class Prediction {
   predictedAt: string; //change to a date later
 
   @OneToOne(() => Game, (game) => game.prediction)
-    @JoinColumn({ name: 'gameId' })
-    game: Relation<Game>;
+  @JoinColumn({ name: 'gameId' })
+  game: Relation<Game>;
 }

@@ -13,11 +13,11 @@ async function createGame(req: Request, res: Response): Promise<void> {
 
   const { name, price, type } = result.data;
 
-  try{
+  try {
     const newGame = await addGame(name, price, type);
     console.log(newGame);
     res.sendStatus(201);
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
@@ -34,9 +34,9 @@ async function displayGame(req: Request, res: Response): Promise<void> {
   const { gameId } = result.data;
 
   const game = await getGameById(gameId);
-  if(!game){
-    console.log("Could not find game");
-    res.status(404).json({message: 'Game Not Found'});
+  if (!game) {
+    console.log('Could not find game');
+    res.status(404).json({ message: 'Game Not Found' });
     return;
   }
 
@@ -56,10 +56,9 @@ async function displayAllGames(req: Request, res: Response): Promise<void> {
 
   let games: Game[];
 
-  if(type != undefined){
+  if (type != undefined) {
     games = await getAllGames(type);
-  }
-  else{
+  } else {
     games = await getAllGames();
   }
 
@@ -69,4 +68,3 @@ async function displayAllGames(req: Request, res: Response): Promise<void> {
 }
 
 export { createGame, displayAllGames, displayGame };
-

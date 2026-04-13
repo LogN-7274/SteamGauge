@@ -1,12 +1,13 @@
-import { AppDataSource } from "../dataSource.js";
-import { Prediction } from "../entities/Prediction.js";
+import { AppDataSource } from '../dataSource.js';
+import { Prediction } from '../entities/Prediction.js';
 
 const PredictionRepository = AppDataSource.getRepository(Prediction);
 
-async function addPrediction(gameId: string, 
-                             predictionPrice: number, 
-                             predictionDate: string): Promise<Prediction> {
-
+async function addPrediction(
+  gameId: string,
+  predictionPrice: number,
+  predictionDate: string,
+): Promise<Prediction> {
   const newPrediction = new Prediction();
   newPrediction.gameId = gameId;
   newPrediction.predictionPrice = predictionPrice;
@@ -17,7 +18,7 @@ async function addPrediction(gameId: string,
 }
 
 async function getPredictionByGameId(gameId: string): Promise<Prediction> {
-  return PredictionRepository.findOne({ where: {gameId} })
+  return PredictionRepository.findOne({ where: { gameId } });
 }
 
 export { addPrediction, getPredictionByGameId };
