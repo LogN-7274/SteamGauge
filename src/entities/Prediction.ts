@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, Relation } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, Relation } from 'typeorm';
 import { Game } from './Game.js';
 
 @Entity()
@@ -9,11 +9,11 @@ export class Prediction {
   @Column()
   predictionPrice: number;
 
-  @Column()
+  @CreateDateColumn()
   predictionDate: string; //change to a date later
 
-  @Column()
-  predictedAt: string; //change to a date later
+  // @Column()
+  // predictedAt: string; //change to a date later
 
   @OneToOne(() => Game, (game) => game.prediction)
   @JoinColumn({ name: 'gameId' })
