@@ -33,7 +33,7 @@ export class Game {
   @Column()
   price: number;
 
-  @Column({ type: 'enum' })
+  @Column({ type: 'enum', enum: gameType})
   type: gameType;
 
   @OneToMany(() => SaleHistory, (history) => history.game)
