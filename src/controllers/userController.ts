@@ -1,9 +1,11 @@
 // src/controllers/UserController.ts
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
-import { addUser, getUserByEmail, getUserById } from '../models/users.js';
+import { addUser, deleteUserEntry, getUserByEmail, getUserById } from '../models/users.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { getUserIdSchema, registerUserSchema } from '../validators/users.js';
+import { deleteInterest } from './interestListController.js';
+import { deleteWishlist } from './wishListController.js';
 
 async function registerUser(req: Request, res: Response): Promise<void> {
   const result = registerUserSchema.safeParse(req.body);
@@ -88,4 +90,31 @@ async function logOut(req: Request, res: Response): Promise<void> {
   res.sendStatus(204);
 }
 
-export { displayUser, logIn, logOut, registerUser };
+async function deleteUser(req: Request, res: Response): Promise<void> {
+  //TODO need to finish
+  const reqId = getUserIdSchema.safeParse(req.params);
+  if (!reqId.success) {
+    console.log('bad request for deleting user');
+    res.status(400).json({ message: reqId.error });
+    return;
+  }
+
+  const interestFail = await deleteInterest(reqId.data.userId);
+  const wishFail = await deleteWishlist(reqId.data.userId);
+
+  if (interestFail) {
+    console.log('interest deletion failed');
+    res.status(500).json({ message: 'Internal Server Error' });
+    return;
+  } else if (wishFail) {
+    console.log('interest deletion failed');
+    res.status(500).json({ message: 'Internal Server Error' });
+    return;
+  }
+
+  console.log('deleting user');
+  await deleteUserEntry(reqId.data.userId);
+  res.status(204);
+}
+
+export { deleteUser, displayUser, logIn, logOut, registerUser };

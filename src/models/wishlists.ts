@@ -8,7 +8,7 @@ async function getAllWish(): Promise<WishList[]> {
 }
 
 async function getWishByUser(userId: string): Promise<WishList | null> {
-  return WishListRepository.findOne({ where: { userId } });
+  return WishListRepository.findOne({ where: { userId }, relations: ['games'] });
 }
 
 async function addWishList(): Promise<WishList> {
@@ -18,4 +18,15 @@ async function addWishList(): Promise<WishList> {
   return WishListRepository.save(newList);
 }
 
-export { addWishList, getAllWish, getWishByUser };
+async function removeWishlist(userId: string): Promise<void> {
+  const wishToDelete: WishList | null = await getWishByUser(userId);
+  if (wishToDelete) {
+    await WishListRepository.remove(wishToDelete);
+  }
+}
+
+async function updateWishList(wishlist: WishList): Promise<WishList> {
+  return await WishListRepository.save(wishlist);
+}
+
+export { addWishList, getAllWish, getWishByUser, removeWishlist, updateWishList };

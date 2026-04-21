@@ -18,15 +18,19 @@ async function addUser(userName: string, passwordHash: string, email: string): P
   newUser.userName = userName;
 
   console.log('new user created. ID: ', newUser.userId);
-  return userRepository.save(newUser);
+  return await userRepository.save(newUser);
 }
 
 async function getUserByEmail(email: string): Promise<User | null> {
-  return userRepository.findOne({ where: { email } });
+  return await userRepository.findOne({ where: { email } });
 }
 
 async function updateUserForCreate(user: User): Promise<User> {
-  return userRepository.save(user);
+  return await userRepository.save(user);
 }
 
-export { addUser, getAllUsers, getUserById, getUserByEmail, updateUserForCreate };
+async function deleteUserEntry(userId: string): Promise<void> {
+  await userRepository.delete({ userId });
+}
+
+export { addUser, deleteUserEntry, getAllUsers, getUserByEmail, getUserById, updateUserForCreate };

@@ -3,7 +3,7 @@ import { Game, gameType } from '../entities/Game.js';
 
 const GameRepository = AppDataSource.getRepository(Game);
 
-async function addGame(name: string, price: number, type: gameType): Promise<Game>{
+async function addGame(name: string, price: number, type: gameType): Promise<Game> {
   const newGame = new Game();
   newGame.name = name;
   newGame.price = price;
@@ -13,12 +13,12 @@ async function addGame(name: string, price: number, type: gameType): Promise<Gam
   return GameRepository.save(newGame);
 }
 
-async function getGameById(gameId: string): Promise<Game | null>{
+async function getGameById(gameId: string): Promise<Game | null> {
   return GameRepository.findOne({ where: { gameId } });
 }
 
 async function getAllGames(type?: gameType): Promise<Game[]> {
-  if(!type){
+  if (!type) {
     return GameRepository.find();
   }
   return GameRepository.find({ where: { type } });

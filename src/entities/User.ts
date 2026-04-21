@@ -30,7 +30,6 @@ export class User {
   @Column()
   userName: string;
 
-  //need onetoone with wishlist, one to one with interest list
   @OneToOne(() => WishList)
   @JoinColumn()
   wishlist: Relation<WishList>;
