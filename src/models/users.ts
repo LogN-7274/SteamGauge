@@ -8,14 +8,23 @@ async function getAllUsers(): Promise<User[]> {
 }
 
 async function getUserById(userId: string): Promise<User | null> {
-  return userRepository.findOne({ where: { userId } });
+  return userRepository.findOne({
+    where: { userId },
+    relations: ['wishlist', 'wishlist.games', 'interestList', 'interestList.wishLists'],
+  });
 }
 
-async function addUser(userName: string, passwordHash: string, email: string): Promise<User> {
+async function addUser(
+  userName: string,
+  passwordHash: string,
+  email: string,
+  displayName: string,
+): Promise<User> {
   const newUser = new User();
   newUser.email = email;
   newUser.passHash = passwordHash;
   newUser.userName = userName;
+  newUser.displayName = displayName;
 
   console.log('new user created. ID: ', newUser.userId);
   return await userRepository.save(newUser);

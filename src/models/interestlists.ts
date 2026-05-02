@@ -11,8 +11,9 @@ async function getInterestByUser(userId: string): Promise<InterestList | null> {
   return InterestRepository.findOne({ where: { userId }, relations: ['wishlists'] });
 }
 
-async function addInterest(): Promise<InterestList> {
+async function addInterest(userId: string): Promise<InterestList> {
   const newList = new InterestList();
+  newList.userId = userId;
 
   console.log('created user interest list');
   return InterestRepository.save(newList);

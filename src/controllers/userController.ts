@@ -1,7 +1,15 @@
 // src/controllers/UserController.ts
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
-import { addUser, deleteUserEntry, getUserByEmail, getUserById } from '../models/users.js';
+import { addInterest } from '../models/interestlists.js';
+import {
+  addUser,
+  deleteUserEntry,
+  getUserByEmail,
+  getUserById,
+  updateUserForCreate,
+} from '../models/users.js';
+import { addWishList } from '../models/wishlists.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { getUserIdSchema, registerUserSchema } from '../validators/users.js';
 import { deleteInterest } from './interestListController.js';
@@ -14,12 +22,18 @@ async function registerUser(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { userName, passToHash, email } = result.data;
+  const { userName, passToHash, email, displayName } = result.data;
 
   try {
     const passwordHash = await argon2.hash(passToHash);
-    const newUser = await addUser(userName, passwordHash, email);
-    console.log(newUser);
+    const newUser = await addUser(userName, passwordHash, email, displayName);
+    const newWish = await addWishList(newUser.userId);
+    newUser.wishlist = newWish;
+    const newInterest = await addInterest(newUser.userId);
+    newUser.interestList = newInterest;
+    await updateUserForCreate(newUser);
+    const savedUser = await getUserById(newUser.userId);
+    console.log(savedUser);
     res.sendStatus(201);
   } catch (err) {
     console.error(err);

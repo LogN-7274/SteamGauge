@@ -6,7 +6,6 @@ import {
   updateInterest,
 } from '../models/interestlists.js';
 import { getUserById, updateUserForCreate } from '../models/users.js';
-import { getWishByUser } from '../models/wishlists.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { getUserIdSchema } from '../validators/users.js';
 
@@ -28,7 +27,7 @@ async function createInterest(req: Request, res: Response): Promise<void> {
   }
 
   try {
-    const newInterest = await addInterest();
+    const newInterest = await addInterest(foundUser.userId);
     foundUser.interestList = newInterest;
     updateUserForCreate(foundUser);
     console.log('wishlist created');
@@ -112,14 +111,16 @@ async function addWishToInterest(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const wishFound = await getWishByUser(wishUserId.data.userId);
-  const interestFound = await getInterestByUser(InterestUserId);
+  const userFound = await getUserById(wishUserId.data.userId);
 
-  if (!wishFound) {
+  if (!userFound) {
     console.log('attempting to add a nonexistant wishlist to an interest list');
     res.status(404).json({ message: 'wishlist not found' });
     return;
-  } else if (!interestFound) {
+  }
+
+  const interestFound = userFound.interestList;
+  if (!interestFound) {
     console.log('attempting to add a wishlist to a nonexistant interest list');
     res.status(404).json({ message: 'Interest list not found' });
     return;
@@ -138,7 +139,7 @@ async function addWishToInterest(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  interestFound.wishLists.push(wishFound);
+  interestFound.wishLists.push(userFound.wishlist);
   await updateInterest(interestFound);
   res.status(200).json({ message: 'Successfully added wishlist to interest list' });
   return;
@@ -158,7 +159,8 @@ async function removeWishFromInterest(req: Request, res: Response): Promise<void
     return;
   }
 
-  const wishFound = await getWishByUser(wishUserId.data.userId);
+  const userFound = await getUserById(wishUserId.data.userId);
+  const wishFound = userFound.wishlist;
   const interestFound = await getInterestByUser(InterestUserId);
 
   if (!wishFound) {
