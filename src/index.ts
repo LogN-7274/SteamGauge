@@ -39,14 +39,14 @@ app.post('/predictions/:gameId', createPrediction);
 app.get('/predictions/:gameId', displayPrediction);
 
 app.post('/users', registerUser);
-app.get('/users/:userId', displayUser);
+app.get('/users/:userId/api', displayUser);
 
-app.get('/users/:userId/wishlist', displayWishlist);
+app.get('/users/:userId/wishlist/api', displayWishlist);
 app.post('/users/:userId', createWishList);
 app.put('/games/:gameId', addGameToWish);
 app.put('/users/:userId/wishlist', removeGameFromWish);
 
-app.get('/users/:userId/interest', displayInterest);
+app.get('/users/:userId/interest/api', displayInterest);
 app.post('/users/:userId/interest', createInterest);
 
 app.delete('/logout', logOut);
