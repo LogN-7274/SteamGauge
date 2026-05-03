@@ -4,6 +4,7 @@ import { getUserById, updateUserForCreate } from '../models/users.js';
 import { addWishList, removeWishlist, updateWishList } from '../models/wishlists.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { getUserIdSchema } from '../validators/users.js';
+import { GetGameSchema } from '../validators/games.js';
 
 async function createWishList(req: Request, res: Response): Promise<void> {
   const reqId = getUserIdSchema.safeParse(req.body);
@@ -140,21 +141,21 @@ async function addGameToWish(req: Request, res: Response): Promise<void> {
 }
 
 async function removeGameFromWish(req: Request, res: Response): Promise<void> {
-  const { gameId } = req.params as Record<string, string>; //Need to ask Saldivar about this
-  const userId = getUserIdSchema.safeParse(req.body);
+  const { userId } = req.params as Record<string, string>; //Need to ask Saldivar about this
+  const gameId = GetGameSchema.safeParse(req.body);
 
-  if (!gameId) {
-    console.log('bad wishlist remove request: gameId parameter');
+  if (!userId) {
+    console.log('bad wishlist remove request: userId parameter');
     res.status(400).json({ message: 'bad request' });
     return;
-  } else if (!userId.success) {
+  } else if (!gameId.success) {
     console.log('bad wishlist remove request: userId body');
-    res.status(400).json({ message: userId.error });
+    res.status(400).json({ message: gameId.error });
     return;
   }
 
-  const gameFound = await getGameById(gameId);
-  const userFound = await getUserById(userId.data.userId);
+  const gameFound = await getGameById(gameId.data.gameId);
+  const userFound = await getUserById(userId);
 
   if (!gameFound) {
     console.log('attempting to remove a nonexistant game to a wishlist');
@@ -176,7 +177,7 @@ async function removeGameFromWish(req: Request, res: Response): Promise<void> {
 
   let gameIsIn = false;
   for (const game of wishToUpdate.games) {
-    if (game.gameId === gameId) {
+    if (game.gameId === gameId.data.gameId) {
       gameIsIn = true;
     }
   }

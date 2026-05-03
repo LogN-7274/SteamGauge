@@ -29,8 +29,9 @@ async function createInterest(req: Request, res: Response): Promise<void> {
   try {
     const newInterest = await addInterest(foundUser.userId);
     foundUser.interestList = newInterest;
+    newInterest.wishLists.push(foundUser.wishlist);
     updateUserForCreate(foundUser);
-    console.log('wishlist created');
+    console.log('intereslist created');
     res.sendStatus(201);
   } catch (err) {
     console.error(err);
@@ -146,7 +147,7 @@ async function addWishToInterest(req: Request, res: Response): Promise<void> {
 }
 
 async function removeWishFromInterest(req: Request, res: Response): Promise<void> {
-  const { InterestUserId } = req.params as Record<string, string>; //Need to ask Saldivar about this
+  const { InterestUserId } = req.params as Record<string, string>;
   const wishUserId = getUserIdSchema.safeParse(req.body);
 
   if (!InterestUserId) {
