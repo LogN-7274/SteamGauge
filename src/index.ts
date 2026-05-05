@@ -28,29 +28,30 @@ import {
   removeGameFromWish,
 } from './controllers/wishListController.js';
 
-app.post('/games', createGame);
-app.get('/games/:gameId', displayGame);
-app.get('/games', displayAllGames);
+app.post('/api/games', createGame);
+app.get('/api/games/:gameId', displayGame);
+app.get('/api/games', displayAllGames);
 
-app.post('/salehistory/:gameId', createSaleHistory);
-app.get('/salehistory/:gameId', displaySaleHistory);
+app.post('/api/salehistory/:gameId', createSaleHistory);
+app.get('/api/salehistory/:gameId', displaySaleHistory);
 
-app.post('/predictions/:gameId', createPrediction);
-app.get('/predictions/:gameId', displayPrediction);
+app.post('/api/predictions/:gameId', createPrediction);
+app.get('/api/predictions/:gameId', displayPrediction);
 
-app.post('/users', registerUser);
-app.get('/users/:userId/api', displayUser);
+app.post('/api/users', registerUser);
+app.get('/api/users/:userId', displayUser);
 
-app.get('/users/:userId/wishlist/api', displayWishlist);
-app.post('/users/:userId', createWishList);
-app.put('/games/:gameId', addGameToWish);
-app.put('/users/:userId/wishlist', removeGameFromWish);
+app.get('/api/users/:userId/wishlist', displayWishlist);
+app.post('/api/users/:userId/wishlist', createWishList);
+app.put('/api/games/:gameId', addGameToWish);
+app.put('/api/users/:userId/wishlist/remove', removeGameFromWish);
 
-app.get('/users/:userId/interest/api', displayInterest);
-app.post('/users/:userId/interest', createInterest);
+app.get('/api/users/:userId/interest', displayInterest);
+app.post('/api/users/:userId/interest', createInterest);
 
-app.delete('/logout', logOut);
-app.post('/login', logIn);
+app.delete('/api/logout', logOut);
+app.post('/api/login', logIn);
+//app.get('/api/me', getMe);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);

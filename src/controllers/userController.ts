@@ -11,7 +11,7 @@ import {
 } from '../models/users.js';
 import { addWishList } from '../models/wishlists.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
-import { getUserIdSchema, registerUserSchema } from '../validators/users.js';
+import { getUserIdSchema, registerUserSchema, loginSchema } from '../validators/users.js';
 import { deleteInterest } from './interestListController.js';
 import { deleteWishlist } from './wishListController.js';
 
@@ -65,7 +65,7 @@ async function displayUser(req: Request, res: Response): Promise<void> {
 }
 
 async function logIn(req: Request, res: Response): Promise<void> {
-  const result = registerUserSchema.safeParse(req.body);
+  const result = loginSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json(result.error.flatten());
     return;

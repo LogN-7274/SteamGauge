@@ -10,3 +10,8 @@ export const registerUserSchema = z.object({
 export const getUserIdSchema = z.object({
   userId: z.string(),
 });
+
+export const loginSchema = z.object({
+  email: z.string().min(1, 'Please enter Email'),
+  passToHash: z.string().min(1, 'Please enter Password'),
+});
