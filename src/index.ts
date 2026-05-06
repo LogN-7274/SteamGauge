@@ -51,7 +51,15 @@ app.post('/api/users/:userId/interest', createInterest);
 
 app.delete('/api/logout', logOut);
 app.post('/api/login', logIn);
-//app.get('/api/me', getMe);
+app.get('/api/me', (req, res) => {
+  if (!req.session.isLoggedIn || !req.session.authenticatedUser) {
+    res.sendStatus(401);
+    return;
+  }
+
+  const { userId, email, displayName } = req.session.authenticatedUser;
+  res.json({ id: userId, email, displayName });
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);

@@ -1,7 +1,7 @@
 import { api } from './api';
 
 export interface User {
-  userId: string;
+  id: string;
   email: string;
   displayName: string;
 }
