@@ -17,7 +17,12 @@ app.use(express.static('public', { extensions: ['html'] }));
 // Register your routes below this line
 
 import { createGame, displayAllGames, displayGame } from './controllers/gameController.js';
-import { createInterest, displayInterest } from './controllers/interestListController.js';
+import {
+  addWishToInterest,
+  createInterest,
+  displayInterest,
+  removeWishFromInterest,
+} from './controllers/interestListController.js';
 import { createPrediction, displayPrediction } from './controllers/predictionController.js';
 import { createSaleHistory, displaySaleHistory } from './controllers/saleHistoryController.js';
 import { displayUser, logIn, logOut, registerUser } from './controllers/userController.js';
@@ -45,9 +50,11 @@ app.get('/api/users/:userId/wishlist', displayWishlist);
 app.post('/api/users/:userId/wishlist', createWishList);
 app.put('/api/games/:gameId', addGameToWish);
 app.put('/api/users/:userId/wishlist/remove', removeGameFromWish);
+app.put('api/users/:userId/wishlist/interest', addWishToInterest);
 
 app.get('/api/users/:userId/interest', displayInterest);
 app.post('/api/users/:userId/interest', createInterest);
+app.put('/api/users/:userId/interest', removeWishFromInterest);
 
 app.delete('/api/logout', logOut);
 app.post('/api/login', logIn);

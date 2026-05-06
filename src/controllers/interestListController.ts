@@ -99,7 +99,7 @@ async function deleteInterest(userId: string): Promise<boolean> {
 }
 
 async function addWishToInterest(req: Request, res: Response): Promise<void> {
-  const { InterestUserId } = req.params as Record<string, string>; //Need to ask Saldivar about this
+  const { InterestUserId } = req.params as Record<string, string>;
   const wishUserId = getUserIdSchema.safeParse(req.body);
 
   if (!InterestUserId) {
