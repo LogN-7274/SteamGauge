@@ -49,24 +49,31 @@ async function displayPrediction(req: Request, res: Response): Promise<void> {
   return;
 }
 
-async function calculatePredictions(): Promise<void>{
+async function calculatePredictions(res: Response, req: Request): Promise<void>{
   const games = await getAllGames();
   for(const game of games){
     await new Promise<void>((resolve) => {
-      const python = spawn('python', ['./prediction.py', game.gameId])
-
+      const python = spawn('python', ['-u', './src/prediction.py', game.gameId])
       let resultData = "";
 
       python.stdout.on('data', (data) => {
         resultData += data.toString();
       });
+      python.stderr.on('data', (data) => {
+        console.error(`PYTHON ERROR: ${data.toString()}`);
+      })
 
       python.on('close', async (code) => {
+        console.log(code);
         if(code === 0 && resultData){
+          console.log("Somethign");
           try {
             const result = JSON.parse(resultData);
-            await addPrediction(result.predictionPrice, new Date(result.predictionDate), 
-                                game.gameId);
+            const parsedDate = new Date(result.predictionDate);
+            if(!isNaN(parsedDate.getTime())){
+              await addPrediction(result.predictionPrice, parsedDate, 
+                                  game.gameId);
+            }
           } catch(err){
             console.error(err);
           }

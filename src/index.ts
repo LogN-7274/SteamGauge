@@ -23,7 +23,7 @@ import {
   displayInterest,
   removeWishFromInterest,
 } from './controllers/interestListController.js';
-import { displayPrediction } from './controllers/predictionController.js';
+import { calculatePredictions } from './controllers/predictionController.js';
 import { getSaleHistory } from './controllers/saleHistoryController.js';
 import { displayUser, logIn, logOut, registerUser } from './controllers/userController.js';
 import {
@@ -37,7 +37,7 @@ import {
 app.get('/api/games/:gameId/salehistory', getSaleHistory);
 
 // app.post('/api/predictions/:gameId', createPrediction);
-app.get('/api/games/:gameId/prediction', displayPrediction);
+app.post('/api/predictions', calculatePredictions);
 
 app.post('/api/games/', logGames);
 app.get('/api/games/:gameId', displayGame);

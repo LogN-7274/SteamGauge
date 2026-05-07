@@ -14,7 +14,7 @@ async function addGame(id: string, title: string, price: number, boxart: string)
 }
 
 async function getGameById(gameId: string): Promise<Game | null> {
-  return GameRepository.findOne({ where: { gameId } });
+  return GameRepository.findOne({ where: { gameId }, relations: ['prediction'] });
 }
 
 async function getAllGames(): Promise<Game[]> {
