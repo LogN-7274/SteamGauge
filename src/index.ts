@@ -4,7 +4,6 @@ import { sessionMiddleware } from './sessionConfig.js';
 
 const app: Express = express();
 
-// bla
 app.use(sessionMiddleware); // Setup session management middleware
 app.use(express.json()); // Setup JSON body parsing middleware
 app.use(express.urlencoded({ extended: false })); // Setup urlencoded (HTML Forms) body parsing middleware
@@ -16,56 +15,58 @@ app.use(express.static('public', { extensions: ['html'] }));
 
 // -- Routes --------------------------------------------------
 // Register your routes below this line
-//bla
 
-// import { createGame, displayGame } from './controllers/gameController.js';
-// app.post('/games', createGame);
-// app.get('/games/:gameId', displayGame);
+import { createGame, displayAllGames, displayGame } from './controllers/gameController.js';
+import {
+  addWishToInterest,
+  createInterest,
+  displayInterest,
+  removeWishFromInterest,
+} from './controllers/interestListController.js';
+import { displayPrediction } from './controllers/predictionController.js';
+import { displaySaleHistory } from './controllers/saleHistoryController.js';
+import { displayUser, logIn, logOut, registerUser } from './controllers/userController.js';
+import {
+  addGameToWish,
+  createWishList,
+  displayWishlist,
+  removeGameFromWish,
+} from './controllers/wishListController.js';
 
-import { displayAllGames } from './controllers/gameController.js';
+app.post('/api/games', createGame);
+app.get('/api/games/:gameId', displayGame);
 app.get('/api/games', displayAllGames);
 
-// import { getPopularGames } from './controllers/gameController.js';
-// app.get('/api/games', getPopularGames);
-
-import { logGames } from './controllers/gameController.js';
-app.post('/api/games', logGames)
-
-// import { createSaleHistory } from './controllers/saleHistoryController.js';
 // app.post('/api/salehistory/:gameId', createSaleHistory);
-
-import { displaySaleHistory } from './controllers/saleHistoryController.js';
 app.get('/api/salehistory/:gameId', displaySaleHistory);
 
-// import { createPrediction } from './controllers/predictionController.js';
 // app.post('/api/predictions/:gameId', createPrediction);
-
-import { displayPrediction } from './controllers/predictionController.js';
 app.get('/api/predictions/:gameId', displayPrediction);
 
-import { registerUser } from './controllers/userController.js';
 app.post('/api/users', registerUser);
-
-import { displayUser } from './controllers/userController.js';
 app.get('/api/users/:userId', displayUser);
 
-import { displayWishlist } from './controllers/wishListController.js';
 app.get('/api/users/:userId/wishlist', displayWishlist);
+app.post('/api/users/:userId/wishlist', createWishList);
+app.put('/api/games/:gameId', addGameToWish);
+app.put('/api/users/:userId/wishlist/remove', removeGameFromWish);
+app.put('api/users/:userId/wishlist/interest', addWishToInterest);
 
-import { createWishList } from './controllers/wishListController.js';
-app.post('/api/users/:userId', createWishList);
+app.get('/api/users/:userId/interest', displayInterest);
+app.post('/api/users/:userId/interest', createInterest);
+app.put('/api/users/:userId/interest', removeWishFromInterest);
 
-// import { displayInterest } from './controllers/interestListController.js';
-// app.get('/users/:userId/interest', displayInterest);
-
-// import { createInterest } from './controllers/interestListController.js';
-// app.post('/users/:userId/interest', createInterest);
-
-import { logOut } from './controllers/userController.js';
 app.delete('/api/logout', logOut);
-
-import { logIn } from './controllers/userController.js';
 app.post('/api/login', logIn);
+app.get('/api/me', (req, res) => {
+  if (!req.session.isLoggedIn || !req.session.authenticatedUser) {
+    res.sendStatus(401);
+    return;
+  }
+
+  const { userId, email, displayName } = req.session.authenticatedUser;
+  res.json({ id: userId, email, displayName });
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);

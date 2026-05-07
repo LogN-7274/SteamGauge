@@ -12,7 +12,7 @@ async function addGame(id: string, title: string, price: number, boxart: string)
   return GameRepository.save(newGame);
 }
 
-async function getGameById(gameId: string): Promise<Game | null>{
+async function getGameById(gameId: string): Promise<Game | null> {
   return GameRepository.findOne({ where: { gameId } });
 }
 

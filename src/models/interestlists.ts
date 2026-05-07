@@ -8,14 +8,26 @@ async function getAllInterest(): Promise<InterestList[]> {
 }
 
 async function getInterestByUser(userId: string): Promise<InterestList | null> {
-  return InterestRepository.findOne({ where: { userId } });
+  return InterestRepository.findOne({ where: { userId }, relations: ['wishlists'] });
 }
 
-async function addInterest(): Promise<InterestList> {
+async function addInterest(userId: string): Promise<InterestList> {
   const newList = new InterestList();
+  newList.userId = userId;
 
   console.log('created user interest list');
   return InterestRepository.save(newList);
 }
 
-export { addInterest, getAllInterest, getInterestByUser };
+async function removeInterest(userId: string): Promise<void> {
+  const interestToDelete: InterestList | null = await getInterestByUser(userId);
+  if (interestToDelete) {
+    await InterestRepository.remove(interestToDelete);
+  }
+}
+
+async function updateInterest(interestList: InterestList): Promise<InterestList> {
+  return await InterestRepository.save(interestList);
+}
+
+export { addInterest, getAllInterest, getInterestByUser, removeInterest, updateInterest };
