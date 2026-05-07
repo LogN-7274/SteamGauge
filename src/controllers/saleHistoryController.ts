@@ -1,33 +1,28 @@
 import { Request, Response } from 'express';
-import { addSaleHistory, getSaleHistoryByGameId } from '../models/salehistory.js';
-import { parseDatabaseError } from '../utils/db-utils.js';
-import {
-  CreateSaleHistoryBodySchema,
-  CreateSaleHistoryParamsSchema,
-  GetSaleHistorySchema,
-} from '../validators/salehistory.js';
+import { getSaleHistoryByGameId } from '../models/salehistory.js';
+import { GetSaleHistorySchema } from '../validators/salehistory.js';
 
-async function createSaleHistory(req: Request, res: Response): Promise<void> {
-  const paramsResult = CreateSaleHistoryParamsSchema.safeParse(req.params);
-  const bodyResult = CreateSaleHistoryBodySchema.safeParse(req.body);
-  if (!bodyResult.success || !paramsResult.success) {
-    res.status(400);
-    return;
-  }
+// async function createSaleHistory(req: Request, res: Response): Promise<void> {
+//   const paramsResult = CreateSaleHistoryParamsSchema.safeParse(req.params);
+//   const bodyResult = CreateSaleHistoryBodySchema.safeParse(req.body);
+//   if (!bodyResult.success || !paramsResult.success) {
+//     res.status(400);
+//     return;
+//   }
 
-  const { gameId } = paramsResult.data;
-  const { price, priceDate } = bodyResult.data;
+//   const { gameId } = paramsResult.data;
+//   const { price, priceDate } = bodyResult.data;
 
-  try {
-    const newSaleHistory = await addSaleHistory(gameId, price, priceDate);
-    console.log(newSaleHistory);
-    res.sendStatus(201);
-  } catch (err) {
-    console.error(err);
-    const databaseErrorMessage = parseDatabaseError(err);
-    res.status(500).json(databaseErrorMessage);
-  }
-}
+//   try {
+//     const newSaleHistory = await addSaleHistory();
+//     console.log(newSaleHistory);
+//     res.sendStatus(201);
+//   } catch (err) {
+//     console.error(err);
+//     const databaseErrorMessage = parseDatabaseError(err);
+//     res.status(500).json(databaseErrorMessage);
+//   }
+// }
 
 async function displaySaleHistory(req: Request, res: Response): Promise<void> {
   const result = GetSaleHistorySchema.safeParse(req.params);
@@ -50,4 +45,5 @@ async function displaySaleHistory(req: Request, res: Response): Promise<void> {
   return;
 }
 
-export { createSaleHistory, displaySaleHistory };
+export { displaySaleHistory };
+

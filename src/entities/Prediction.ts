@@ -1,18 +1,24 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, Relation } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryColumn, Relation } from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
 import { Game } from './Game.js';
 
 @Entity()
 export class Prediction {
   @PrimaryColumn()
-  gameId: string;
+  predictionId: string;
+
+  @BeforeInsert()
+  generateId() : void{
+    this.predictionId = uuidv7();
+  }
 
   @Column()
   predictionPrice: number;
 
-  @CreateDateColumn()
-  predictionDate: string; //change to a date later
+  @Column()
+  predictionDate: Date; //change to a date later
 
-  // @Column()
+  // @CreateDateColumn()
   // predictedAt: string; //change to a date later
 
   @OneToOne(() => Game, (game) => game.prediction)

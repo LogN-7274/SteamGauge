@@ -1,5 +1,4 @@
 import {
-  BeforeInsert,
   Column,
   Entity,
   OneToMany,
@@ -7,7 +6,6 @@ import {
   PrimaryColumn,
   Relation,
 } from 'typeorm';
-import { v7 as uuidv7 } from 'uuid';
 import { Prediction } from './Prediction.js';
 import { SaleHistory } from './SaleHistory.js';
 
@@ -22,22 +20,17 @@ export class Game {
   @PrimaryColumn()
   gameId: string;
 
-  @BeforeInsert()
-  generateId(): void {
-    this.gameId = uuidv7();
-  }
-
   @Column()
-  name: string;
+  title: string;
 
-  @Column()
+  @Column({type: 'decimal', scale: 2})
   price: number;
 
-  @Column({ type: 'enum', enum: gameType})
-  type: gameType;
+  @Column({nullable: true})
+  boxart: string;
 
   @OneToMany(() => SaleHistory, (history) => history.game)
-  gameHistory: Relation<SaleHistory[]>;
+  saleHistory: Relation<SaleHistory[]>;
 
   @OneToOne(() => Prediction, (prediction) => prediction.game)
   prediction: Relation<Prediction>;

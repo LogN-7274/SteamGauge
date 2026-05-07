@@ -1,18 +1,27 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
 import { Game } from './Game.js';
 
 @Entity()
 export class SaleHistory {
   @PrimaryColumn()
-  gameId: string;
+  salesHistoryId: string;
 
-  @Column("simple-array") // typeORM documentation https://typeorm.io/docs/entity/entities/
-  priceDate: string[]; //need to change to date later
+  @BeforeInsert()
+  generateId(): void{
+    this.salesHistoryId = uuidv7();
+  }
 
-  @Column("simple-array")
-  price: number[];
+  @Column() 
+  dealDate: Date; 
 
-  @ManyToOne(() => Game, (game) => game.gameHistory)
+  @Column({type: 'decimal', scale: 2})
+  deal: number;
+
+  @Column()
+  cut: number;
+
+  @ManyToOne(() => Game, (game) => game.saleHistory)
   @JoinColumn({ name: 'gameId' })
   game: Relation<Game>;
 }

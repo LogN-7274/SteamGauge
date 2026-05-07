@@ -1,32 +1,32 @@
+import { spawn } from 'child_process';
 import { Request, Response } from 'express';
+import { getAllGames } from '../models/games.js';
 import { addPrediction, getPredictionByGameId } from '../models/predictions.js';
-import { parseDatabaseError } from '../utils/db-utils.js';
 import {
-  CreatePredictionBodySchema,
-  CreatePredictionParamsSchema,
   GetPredictionSchema,
 } from '../validators/predictions.js';
-async function createPrediction(req: Request, res: Response): Promise<void> {
-  const paramsResult = CreatePredictionParamsSchema.safeParse(req.params);
-  const bodyResult = CreatePredictionBodySchema.safeParse(req.body);
-  if (!bodyResult.success || !paramsResult.success) {
-    res.status(400);
-    return;
-  }
 
-  const { gameId } = paramsResult.data;
-  const { predictionPrice, predictionDate } = bodyResult.data;
+// async function createPrediction(req: Request, res: Response): Promise<void> {
+//   const paramsResult = CreatePredictionParamsSchema.safeParse(req.params);
+//   const bodyResult = CreatePredictionBodySchema.safeParse(req.body);
+//   if (!bodyResult.success || !paramsResult.success) {
+//     res.status(400);
+//     return;
+//   }
 
-  try {
-    const newPrediction = await addPrediction(gameId, predictionPrice, predictionDate);
-    console.log(newPrediction);
-    res.sendStatus(201);
-  } catch (err) {
-    console.error(err);
-    const databaseErrorMessage = parseDatabaseError(err);
-    res.status(500).json(databaseErrorMessage);
-  }
-}
+//   const { gameId } = paramsResult.data;
+//   const { predictionPrice, predictionDate } = bodyResult.data;
+
+//   try {
+//     const newPrediction = await addPrediction(predictionPrice, predictionDate, gameId);
+//     console.log(newPrediction);
+//     res.sendStatus(201);
+//   } catch (err) {
+//     console.error(err);
+//     const databaseErrorMessage = parseDatabaseError(err);
+//     res.status(500).json(databaseErrorMessage);
+//   }
+// }
 
 async function displayPrediction(req: Request, res: Response): Promise<void> {
   const result = GetPredictionSchema.safeParse(req.params);
@@ -49,4 +49,33 @@ async function displayPrediction(req: Request, res: Response): Promise<void> {
   return;
 }
 
-export { createPrediction, displayPrediction };
+async function calculatePredictions(): Promise<void>{
+  const games = await getAllGames();
+  for(const game of games){
+    await new Promise<void>((resolve) => {
+      const python = spawn('python', ['./prediction.py', game.gameId])
+
+      let resultData = "";
+
+      python.stdout.on('data', (data) => {
+        resultData += data.toString();
+      });
+
+      python.on('close', async (code) => {
+        if(code === 0 && resultData){
+          try {
+            const result = JSON.parse(resultData);
+            await addPrediction(result.predictionPrice, new Date(result.predictionDate), 
+                                game.gameId);
+          } catch(err){
+            console.error(err);
+          }
+        }
+        resolve();
+      })
+    })
+  }
+}
+
+export { calculatePredictions, displayPrediction };
+

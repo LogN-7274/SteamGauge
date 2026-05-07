@@ -18,36 +18,42 @@ app.use(express.static('public', { extensions: ['html'] }));
 // Register your routes below this line
 //bla
 
-import { createGame, displayGame } from './controllers/gameController.js';
-app.post('/games', createGame);
-app.get('/games/:gameId', displayGame);
+// import { createGame, displayGame } from './controllers/gameController.js';
+// app.post('/games', createGame);
+// app.get('/games/:gameId', displayGame);
 
 import { displayAllGames } from './controllers/gameController.js';
-app.get('/games', displayAllGames);
+app.get('/api/games', displayAllGames);
 
-import { createSaleHistory } from './controllers/saleHistoryController.js';
-app.post('/salehistory/:gameId', createSaleHistory);
+// import { getPopularGames } from './controllers/gameController.js';
+// app.get('/api/games', getPopularGames);
+
+import { logGames } from './controllers/gameController.js';
+app.post('/api/games', logGames)
+
+// import { createSaleHistory } from './controllers/saleHistoryController.js';
+// app.post('/api/salehistory/:gameId', createSaleHistory);
 
 import { displaySaleHistory } from './controllers/saleHistoryController.js';
-app.get('/salehistory/:gameId', displaySaleHistory);
+app.get('/api/salehistory/:gameId', displaySaleHistory);
 
-import { createPrediction } from './controllers/predictionController.js';
-app.post('/predictions/:gameId', createPrediction);
+// import { createPrediction } from './controllers/predictionController.js';
+// app.post('/api/predictions/:gameId', createPrediction);
 
 import { displayPrediction } from './controllers/predictionController.js';
-app.get('/predictions/:gameId', displayPrediction);
+app.get('/api/predictions/:gameId', displayPrediction);
 
 import { registerUser } from './controllers/userController.js';
-app.post('/users', registerUser);
+app.post('/api/users', registerUser);
 
 import { displayUser } from './controllers/userController.js';
-app.get('/users/:userId', displayUser);
+app.get('/api/users/:userId', displayUser);
 
 import { displayWishlist } from './controllers/wishListController.js';
-app.get('/users/:userId/wishlist', displayWishlist);
+app.get('/api/users/:userId/wishlist', displayWishlist);
 
 import { createWishList } from './controllers/wishListController.js';
-app.post('/users/:userId', createWishList);
+app.post('/api/users/:userId', createWishList);
 
 // import { displayInterest } from './controllers/interestListController.js';
 // app.get('/users/:userId/interest', displayInterest);
@@ -56,10 +62,10 @@ app.post('/users/:userId', createWishList);
 // app.post('/users/:userId/interest', createInterest);
 
 import { logOut } from './controllers/userController.js';
-app.delete('/logout', logOut);
+app.delete('/api/logout', logOut);
 
 import { logIn } from './controllers/userController.js';
-app.post('/login', logIn);
+app.post('/api/login', logIn);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
