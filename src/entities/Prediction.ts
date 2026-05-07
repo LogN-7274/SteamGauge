@@ -12,7 +12,7 @@ export class Prediction {
     this.predictionId = uuidv7();
   }
 
-  @Column()
+  @Column({type: 'decimal', scale:2})
   predictionPrice: number;
 
   @Column()

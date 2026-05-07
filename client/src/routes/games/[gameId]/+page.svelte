@@ -7,15 +7,27 @@
   import { toast } from '$lib/toast.svelte';
   import { onMount } from 'svelte';
 
+  interface Prediction {
+    predictionId: string;
+    predictionPrice: number;
+    predictionDate: Date;
+  }
+
   interface Game {
     gameId: string;
     title: string;
     price: number;
     boxart: string;
+    prediction: Prediction;
   }
 
   let game: Game | null = $state(null);
   let loading = $state(true);
+
+  const formatter = Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   onMount(async () => {
     await auth.refresh();
@@ -58,6 +70,18 @@
     <img src={game.boxart} alt={game.title} width="200" />
     <div class="game-info">
       <p>Price: <strong>${game.price}</strong></p>
+      {#if game.prediction}
+        {#if game.prediction.predictionDate}
+          <p>
+            Prediction Price: <strong>${formatter.format(game.prediction.predictionPrice)}</strong>
+          </p>
+          <p>
+            Predicted Date: <strong
+              >{new Date(game.prediction.predictionDate).toLocaleDateString()}</strong
+            >
+          </p>
+        {/if}
+      {/if}
     </div>
   </div>
   <button onclick={() => goto(`/games/${game?.gameId}/salehistory`)}> View Sale History </button>

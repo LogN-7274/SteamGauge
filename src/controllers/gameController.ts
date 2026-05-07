@@ -4,10 +4,9 @@ import { addGame, getAllGames, getGameById } from '../models/games.js';
 import { addSaleHistory } from '../models/salehistory.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { GetGameSchema } from '../validators/games.js';
-import { calculatePredictions } from './predictionController.js';
 
 async function logGames(req: Request, res: Response) : Promise<void> {
-  const result = await axios.get('https://api.isthereanydeal.com/games/history/v2', 
+  const result = await axios.get('https://api.isthereanydeal.com/stats/most-popular/v1', 
        { params: { key: process.env.API_KEY, limit: 200 } });
 
   if (!result) {
@@ -18,14 +17,19 @@ async function logGames(req: Request, res: Response) : Promise<void> {
   const ids = Array.from(result.data, (game: any) => game.id);
   const titles = Array.from(result.data, (game: any) => game.title);
 
+
   const priceResults = await axios.post('https://api.isthereanydeal.com/games/prices/v3', ids, {
     params: { key: process.env.API_KEY },
   });
 
+  const orderResults = ids.map(id =>  {
+    return priceResults.data.find((item: any) => item.id === id);
+  });
   if (!priceResults) {
     res.status(404);
     return;
   }
+
 
   const amounts = priceResults.data.flatMap((price: any) =>
     price.deals.map((deal: any) => deal.regular.amount),
@@ -33,12 +37,11 @@ async function logGames(req: Request, res: Response) : Promise<void> {
 
   try {
     for (let i = 0; i < 200; i++) {
-      console.log(ids[i], titles[i], amounts[i]);
+      console.log(orderResults[i], titles[i], amounts[i]);
       const infoResult = await axios.get('https://api.isthereanydeal.com/games/info/v2', {
         params: { key: process.env.API_KEY, id: ids[i] },
       });
       const boxart = infoResult.data.assets.boxart;
-      console.log(ids[i] == priceResults.data[i].id)
       await addGame(ids[i], titles[i], amounts[i], boxart);
 
       const historylogResult = await axios.get('https://api.isthereanydeal.com/games/history/v2', {
@@ -64,8 +67,6 @@ async function logGames(req: Request, res: Response) : Promise<void> {
           ids[i],
         );
       }
-
-      await calculatePredictions();
     }
     res.sendStatus(201);
     return;
