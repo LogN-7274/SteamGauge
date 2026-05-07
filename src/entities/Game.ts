@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  OneToOne,
-  PrimaryColumn,
-  Relation,
-} from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, Relation } from 'typeorm';
 import { Prediction } from './Prediction.js';
 import { SaleHistory } from './SaleHistory.js';
 
@@ -20,13 +13,13 @@ export class Game {
   @PrimaryColumn()
   gameId: string;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
-  @Column({type: 'decimal', scale: 2})
+  @Column({ type: 'decimal', scale: 2 })
   price: number;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   boxart: string;
 
   @OneToMany(() => SaleHistory, (history) => history.game)

@@ -99,51 +99,56 @@ async function deleteInterest(userId: string): Promise<boolean> {
 }
 
 async function addWishToInterest(req: Request, res: Response): Promise<void> {
-  const { InterestUserId } = req.params as Record<string, string>;
-  const wishUserId = getUserIdSchema.safeParse(req.body);
+  const { userId: wishOwnerId } = req.params as Record<string, string>;
+  const myId = getUserIdSchema.safeParse(req.body);
 
-  if (!InterestUserId) {
-    console.log('bad interest list add request: interest userId parameter');
+  if (!wishOwnerId) {
+    console.log('bad interest list add request: wishlist owner userId parameter');
     res.status(400).json({ message: 'bad request' });
     return;
-  } else if (!wishUserId.success) {
-    console.log('bad interest list add request: wish userId body');
-    res.status(400).json({ message: wishUserId.error });
+  } else if (!myId.success) {
+    console.log('bad interest list add request: my userId body');
+    res.status(400).json({ message: myId.error });
     return;
   }
 
-  const userFound = await getUserById(wishUserId.data.userId);
+  const wishOwner = await getUserById(wishOwnerId);
+  const me = await getUserById(myId.data.userId);
 
-  if (!userFound) {
+  if (!wishOwner) {
     console.log('attempting to add a nonexistant wishlist to an interest list');
-    res.status(404).json({ message: 'wishlist not found' });
+    res.status(404).json({ message: 'Wishlist owner not found' });
+    return;
+  } else if (!me) {
+    console.log('could not find logged in user');
+    res.status(404).json({ message: 'User not found' });
     return;
   }
 
-  const interestFound = userFound.interestList;
+  const interestFound = me.interestList;
+
   if (!interestFound) {
-    console.log('attempting to add a wishlist to a nonexistant interest list');
-    res.status(404).json({ message: 'Interest list not found' });
+    console.log('no interest list found for user');
+    res.status(500).json({ message: 'Interest list not found' });
     return;
   }
 
   let wishIsIn = false;
   for (const wishlist of interestFound.wishLists) {
-    if (wishlist.userId === wishUserId.data.userId) {
+    if (wishlist.userId === wishOwnerId) {
       wishIsIn = true;
     }
   }
 
   if (wishIsIn) {
-    console.log('attemping to add an already listed wishlist');
+    console.log('attempting to add an already listed wishlist');
     res.status(403).json({ message: 'Error, wishlist is already in list' });
     return;
   }
 
-  interestFound.wishLists.push(userFound.wishlist);
+  interestFound.wishLists.push(wishOwner.wishlist);
   await updateInterest(interestFound);
   res.status(200).json({ message: 'Successfully added wishlist to interest list' });
-  return;
 }
 
 async function removeWishFromInterest(req: Request, res: Response): Promise<void> {

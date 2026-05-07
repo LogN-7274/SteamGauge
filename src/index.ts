@@ -16,7 +16,7 @@ app.use(express.static('public', { extensions: ['html'] }));
 // -- Routes --------------------------------------------------
 // Register your routes below this line
 
-import { createGame, displayAllGames, displayGame } from './controllers/gameController.js';
+import { displayAllGames, displayGame, logGames } from './controllers/gameController.js';
 import {
   addWishToInterest,
   createInterest,
@@ -33,7 +33,7 @@ import {
   removeGameFromWish,
 } from './controllers/wishListController.js';
 
-app.post('/api/games', createGame);
+app.post('/api/games', logGames);
 app.get('/api/games/:gameId', displayGame);
 app.get('/api/games', displayAllGames);
 
