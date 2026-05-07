@@ -6,40 +6,8 @@ import { addSaleHistory } from '../models/salehistory.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { GetGameSchema } from '../validators/games.js';
 
-
-async function getPopularGames(req: Request, res: Response): Promise<void>{
-
-  const result = await axios.get('https://api.isthereanydeal.com/stats/most-popular/v1', 
-       { params: { key: process.env.API_KEY, limit: 500 } });
-
-  if(!result){
-    res.status(404);
-    return;
-  }
-
-  const ids = Array.from(result.data, (game: any) => game.id);
-  const titles = Array.from(result.data, (game: any) => game.title);
-
-  const idsArray1 = ids.slice(0,200);
-
-  const priceResults = await axios.post('https://api.isthereanydeal.com/games/prices/v3', idsArray1, 
-    { params: { key: process.env.API_KEY } }
-  )
-
-  if(!priceResults){
-    res.status(404);
-    return;
-  }
-
-  const amounts = priceResults.data.flatMap((price: any) => price.deals.map(
-    (deal: any) => deal.regular.amount));
-  
-  res.status(200).json(ids[0]);
-  return;
-}
-
 async function logGames(req: Request, res: Response) : Promise<void> {
-  const result = await axios.get('https://api.isthereanydeal.com/stats/most-popular/v1', 
+  const result = await axios.get('https://api.isthereanydeal.com/games/history/v2', 
        { params: { key: process.env.API_KEY, limit: 200 } });
 
   if(!result){
@@ -135,5 +103,5 @@ async function displayAllGames(req: Request, res: Response): Promise<void> {
   return;
 }
 
-export { displayAllGames, displayGame, getPopularGames, logGames };
+export { displayAllGames, displayGame, logGames };
 

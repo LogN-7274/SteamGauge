@@ -1,3 +1,4 @@
+import { ILike } from 'typeorm';
 import { AppDataSource } from '../dataSource.js';
 import { Game } from '../entities/Game.js';
 
@@ -17,8 +18,12 @@ async function getGameById(gameId: string): Promise<Game | null> {
 }
 
 async function getAllGames(): Promise<Game[]> {
-    return GameRepository.find();
+  return GameRepository.find();
 }
 
-export { addGame, getAllGames, getGameById };
+async function searchGames(q: string): Promise<Game[]> {
+  return GameRepository.find( {where: { title: ILike(`%${q}%`)}} )
+}
+
+export { addGame, getAllGames, getGameById, searchGames };
 

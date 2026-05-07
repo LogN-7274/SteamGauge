@@ -24,7 +24,7 @@ import { GetSaleHistorySchema } from '../validators/salehistory.js';
 //   }
 // }
 
-async function displaySaleHistory(req: Request, res: Response): Promise<void> {
+async function getSaleHistory(req: Request, res: Response): Promise<void> {
   const result = GetSaleHistorySchema.safeParse(req.params);
   if (!result.success) {
     res.status(400).json(result.error.flatten());
@@ -32,7 +32,6 @@ async function displaySaleHistory(req: Request, res: Response): Promise<void> {
   }
 
   const { gameId } = result.data;
-
   const saleHistory = await getSaleHistoryByGameId(gameId);
   if (!saleHistory) {
     console.log('Could not find sale history');
@@ -45,5 +44,5 @@ async function displaySaleHistory(req: Request, res: Response): Promise<void> {
   return;
 }
 
-export { displaySaleHistory };
+export { getSaleHistory };
 

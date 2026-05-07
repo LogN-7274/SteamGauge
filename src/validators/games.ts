@@ -21,3 +21,8 @@ export const GetAllGamesSchema = z.object({
   type: z.enum(gameType).optional(),
 });
 export type GetAllGamesParams = z.infer<typeof GetAllGamesSchema>;
+
+export const SearchGamesSchema = z.object({
+  q: z.string()
+})
+export type SearchGamesQuery = z.infer<typeof SearchGamesSchema>;

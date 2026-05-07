@@ -16,7 +16,7 @@ app.use(express.static('public', { extensions: ['html'] }));
 // -- Routes --------------------------------------------------
 // Register your routes below this line
 
-import { createGame, displayAllGames, displayGame } from './controllers/gameController.js';
+import { displayAllGames, displayGame, logGames } from './controllers/gameController.js';
 import {
   addWishToInterest,
   createInterest,
@@ -24,7 +24,7 @@ import {
   removeWishFromInterest,
 } from './controllers/interestListController.js';
 import { displayPrediction } from './controllers/predictionController.js';
-import { displaySaleHistory } from './controllers/saleHistoryController.js';
+import { getSaleHistory } from './controllers/saleHistoryController.js';
 import { displayUser, logIn, logOut, registerUser } from './controllers/userController.js';
 import {
   addGameToWish,
@@ -33,15 +33,15 @@ import {
   removeGameFromWish,
 } from './controllers/wishListController.js';
 
-app.post('/api/games', createGame);
-app.get('/api/games/:gameId', displayGame);
-app.get('/api/games', displayAllGames);
-
 // app.post('/api/salehistory/:gameId', createSaleHistory);
-app.get('/api/salehistory/:gameId', displaySaleHistory);
+app.get('/api/games/:gameId/salehistory', getSaleHistory);
 
 // app.post('/api/predictions/:gameId', createPrediction);
-app.get('/api/predictions/:gameId', displayPrediction);
+app.get('/api/games/:gameId/prediction', displayPrediction);
+
+app.post('/api/games/', logGames)
+app.get('/api/games/:gameId', displayGame);
+app.get('/api/games', displayAllGames);
 
 app.post('/api/users', registerUser);
 app.get('/api/users/:userId', displayUser);

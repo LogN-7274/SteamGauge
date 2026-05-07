@@ -12,9 +12,12 @@
     event.preventDefault();
     submitting = true;
 
-    const result = await api.post('/api/login', { email, password });
+    const result = await api.post('/login', { email: email, passToHash: password });
 
     submitting = false;
+
+    console.log(result.status);
+    console.log(result.data);
 
     if (result.status === 403) {
       toast.error('Invalid email or password');
@@ -27,7 +30,7 @@
     }
 
     await auth.refresh();
-    goto('/');
+    goto('/games');
   }
 </script>
 

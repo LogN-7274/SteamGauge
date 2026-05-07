@@ -20,7 +20,8 @@ async function addSaleHistory(deal: number,
 }
 
 async function getSaleHistoryByGameId(gameId: string): Promise<SaleHistory[]> {
-  return SaleHistoryRepository.find({ where: { game: { gameId: gameId } } })
+  return SaleHistoryRepository.find({ where: { game: { gameId: gameId } }, relations: ['game'],
+                                      order:{ dealDate: "ASC"} })
 }
 
 export { addSaleHistory, getSaleHistoryByGameId };
