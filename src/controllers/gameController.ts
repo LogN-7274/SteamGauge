@@ -6,9 +6,10 @@ import { parseDatabaseError } from '../utils/db-utils.js';
 import { GetGameSchema } from '../validators/games.js';
 import { calculatePredictions } from './predictionController.js';
 
-async function logGames(req: Request, res: Response) : Promise<void> {
-  const result = await axios.get('https://api.isthereanydeal.com/games/history/v2', 
-       { params: { key: process.env.API_KEY, limit: 200 } });
+async function logGames(req: Request, res: Response): Promise<void> {
+  const result = await axios.get('https://api.isthereanydeal.com/games/history/v2', {
+    params: { key: process.env.API_KEY, limit: 200 },
+  });
 
   if (!result) {
     res.status(404);
@@ -38,7 +39,7 @@ async function logGames(req: Request, res: Response) : Promise<void> {
         params: { key: process.env.API_KEY, id: ids[i] },
       });
       const boxart = infoResult.data.assets.boxart;
-      console.log(ids[i] == priceResults.data[i].id)
+      console.log(ids[i] == priceResults.data[i].id);
       await addGame(ids[i], titles[i], amounts[i], boxart);
 
       const historylogResult = await axios.get('https://api.isthereanydeal.com/games/history/v2', {
@@ -107,4 +108,3 @@ async function displayAllGames(req: Request, res: Response): Promise<void> {
 }
 
 export { displayAllGames, displayGame, logGames };
-

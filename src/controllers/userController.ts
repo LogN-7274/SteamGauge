@@ -138,4 +138,3 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
 }
 
 export { deleteUser, displayUser, logIn, logOut, registerUser };
-
