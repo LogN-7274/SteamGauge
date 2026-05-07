@@ -15,6 +15,7 @@
   let q = $state('');
   let games: Game[] = $state([]);
   let loading = $state(true);
+  let userId = $state('');
 
   onMount(async () => {
     await auth.refresh();
@@ -36,6 +37,7 @@
 </script>
 
 <h1>Game Search</h1>
+<a href="/users/{auth.user?.id}" role="button">Home</a>
 <input type="text" bind:value={q} placeholder="Search games..." />
 
 {#if loading}
