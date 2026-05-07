@@ -36,8 +36,8 @@
   );
 </script>
 
-<h1>Game Search</h1>
 <a href="/users/{auth.user?.id}" role="button">Home</a>
+<h1>Game Search</h1>
 <input type="text" bind:value={q} placeholder="Search games..." />
 
 {#if loading}
