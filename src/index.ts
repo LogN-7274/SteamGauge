@@ -39,7 +39,7 @@ app.get('/api/games/:gameId/salehistory', getSaleHistory);
 // app.post('/api/predictions/:gameId', createPrediction);
 app.get('/api/games/:gameId/prediction', displayPrediction);
 
-app.post('/api/games/', logGames)
+app.post('/api/games/', logGames);
 app.get('/api/games/:gameId', displayGame);
 app.get('/api/games', displayAllGames);
 
