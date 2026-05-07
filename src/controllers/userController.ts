@@ -11,7 +11,7 @@ import {
 } from '../models/users.js';
 import { addWishList } from '../models/wishlists.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
-import { getUserIdSchema, registerUserSchema, loginSchema } from '../validators/users.js';
+import { getUserIdSchema, loginSchema, registerUserSchema } from '../validators/users.js';
 import { deleteInterest } from './interestListController.js';
 import { deleteWishlist } from './wishListController.js';
 
@@ -138,3 +138,4 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
 }
 
 export { deleteUser, displayUser, logIn, logOut, registerUser };
+

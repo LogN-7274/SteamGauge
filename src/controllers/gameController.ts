@@ -4,6 +4,7 @@ import { addGame, getAllGames, getGameById } from '../models/games.js';
 import { addSaleHistory } from '../models/salehistory.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import { GetGameSchema } from '../validators/games.js';
+import { calculatePredictions } from './predictionController.js';
 
 async function logGames(req: Request, res: Response) : Promise<void> {
   const result = await axios.get('https://api.isthereanydeal.com/games/history/v2', 
@@ -37,6 +38,7 @@ async function logGames(req: Request, res: Response) : Promise<void> {
         params: { key: process.env.API_KEY, id: ids[i] },
       });
       const boxart = infoResult.data.assets.boxart;
+      console.log(ids[i] == priceResults.data[i].id)
       await addGame(ids[i], titles[i], amounts[i], boxart);
 
       const historylogResult = await axios.get('https://api.isthereanydeal.com/games/history/v2', {
@@ -63,7 +65,7 @@ async function logGames(req: Request, res: Response) : Promise<void> {
         );
       }
 
-      // await calculatePredictions();
+      await calculatePredictions();
     }
     res.sendStatus(201);
     return;

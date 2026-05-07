@@ -37,7 +37,7 @@
 {:else if saleHistory.length === 0}
   <p>No sale history for this game.</p>
 {:else}
-  <h1>This is the sales history page</h1>
+  <h1>{saleHistory[0].game.title}'s Sale History</h1>
   <table>
     <thead>
       <tr>
@@ -53,7 +53,7 @@
           <td>${history.game.price}</td>
           <td>${history.deal}</td>
           <td>{history.cut}%</td>
-          <td>{history.dealDate}</td>
+          <td>{new Date(history.dealDate).toLocaleDateString()}</td>
         </tr>
       {/each}
     </tbody>

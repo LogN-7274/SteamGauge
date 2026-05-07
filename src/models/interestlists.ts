@@ -8,7 +8,7 @@ async function getAllInterest(): Promise<InterestList[]> {
 }
 
 async function getInterestByUser(userId: string): Promise<InterestList | null> {
-  return InterestRepository.findOne({ where: { userId }, relations: ['wishlists'] });
+  return InterestRepository.findOne({ where: { userId }, relations: ['wishLists'] });
 }
 
 async function addInterest(userId: string): Promise<InterestList> {
@@ -31,3 +31,4 @@ async function updateInterest(interestList: InterestList): Promise<InterestList>
 }
 
 export { addInterest, getAllInterest, getInterestByUser, removeInterest, updateInterest };
+

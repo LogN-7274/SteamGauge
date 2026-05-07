@@ -3,11 +3,19 @@
   import { api } from '$lib/api';
   import { auth } from '$lib/auth.svelte';
   import { toast } from '$lib/toast.svelte';
+  import { onMount } from 'svelte';
 
   let email = $state('');
   let passToHash = $state('');
   let submitting = $state(false);
 
+  onMount(async () => {
+    await auth.refresh();
+
+    if (auth.user) {
+      goto('/');
+    }
+  });
   async function handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     submitting = true;

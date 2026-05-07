@@ -1,10 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { auth } from '$lib/auth.svelte';
   import { page } from '$app/state';
-  import { onMount } from 'svelte';
   import { api } from '$lib/api';
+  import { auth } from '$lib/auth.svelte';
   import { toast } from '$lib/toast.svelte';
+  import { onMount } from 'svelte';
 
   //THIS IS /users/[userId]/wishlist
 
@@ -28,35 +28,35 @@
   }
 
   interface PublicUser {
-  userId: string;
-  userName: string;
-  displayName: string;
-  email: string;
+    userId: string;
+    userName: string;
+    displayName: string;
+    email: string;
   }
 
-  async function takeInterest(): Promise<void>{
-    const added = await api.put(`/users/${userId}/wishlist/interest`, {userId: auth.user?.id});
-    if (added.ok){
+  async function takeInterest(): Promise<void> {
+    const added = await api.put(`/users/${userId}/wishlist/interest`, { userId: auth.user?.id });
+    if (added.ok) {
       hasInterest = true;
       toast.success('Added Wishlist to Interest');
-    } else{
+    } else {
       toast.error('Failed to add Wishlist to Interest List');
     }
   }
 
   onMount(async () => {
+    await auth.refresh();
     if (!auth.user) {
       goto('/');
-    }
-    else{
+    } else {
       const wishGrab = await api.get<WishList>(`/users/${userId}/wishlist`);
-      if (wishGrab.ok){
+      if (wishGrab.ok) {
         foundWishlist = wishGrab.data;
       }
 
       const userResult = await api.get<PublicUser>(`/users/${userId}`);
       if (userResult.ok) {
-        otherUserName = userResult.data.displayName
+        otherUserName = userResult.data.displayName;
       }
     }
   });
@@ -77,7 +77,6 @@
     </div>
   {/each}
   <a href="/users/{auth.user.id}">Back Home</a>
-
 {:else}
   <p>Please log in</p>
   <a href="/login" role="button">Log in</a>

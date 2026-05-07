@@ -2,7 +2,9 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import { api } from '$lib/api';
+  import { auth } from '$lib/auth.svelte';
   import Loading from '$lib/components/Loading.svelte';
+  import { toast } from '$lib/toast.svelte';
   import { onMount } from 'svelte';
 
   interface Game {
@@ -16,6 +18,12 @@
   let loading = $state(true);
 
   onMount(async () => {
+    await auth.refresh();
+
+    if (!auth.user) {
+      goto('/login');
+    }
+
     const gameId = page.params.gameId;
     const result = await api.get<Game>(`/games/${gameId}`);
 
@@ -26,10 +34,16 @@
     loading = false;
   });
 
-  async function handleClick(event: Event): Promise<void> {
+  async function handleAdd(event: Event): Promise<void> {
     event.preventDefault();
-    if (game) {
-      goto(`/games/${game.gameId}/salehistory`);
+
+    const gameId = page.params.gameId;
+    const result = await api.put(`/games/${gameId}`, { userId: auth.user?.id });
+
+    if (!result.ok) {
+      toast.error('Something went wrong');
+    } else {
+      toast.success('Game added to wishlist');
     }
   }
 </script>
@@ -39,14 +53,43 @@
 {:else if !game}
   <p>Game not found.</p>
 {:else}
-  <div>
-    <h1>{game.title}</h1>
-    <div class="game-container">
-      <img src={game.boxart} alt={game.title} width="200" />
-      <div class="game-info">
-        <p>Price: <strong>${game.price}</strong></p>
-        <button onclick={handleClick}> View Sale History </button>
-      </div>
+  <h1>{game.title}</h1>
+  <div class="game-container">
+    <img src={game.boxart} alt={game.title} width="200" />
+    <div class="game-info">
+      <p>Price: <strong>${game.price}</strong></p>
     </div>
   </div>
+  <button onclick={() => goto(`/games/${game?.gameId}/salehistory`)}> View Sale History </button>
+  <div class="bottom-bar">
+    <button class="add-button" onclick={handleAdd}> +Add to wishlist </button>
+  </div>
 {/if}
+
+<style>
+  .bottom-bar {
+    position: relative;
+  }
+  .add-button {
+    margin-top: 15px;
+    padding: 10px, 50px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .add-button {
+    background-color: #22c55e;
+    transform: translateY(-2px);
+  }
+
+  .game-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+</style>
