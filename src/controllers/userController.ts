@@ -59,8 +59,10 @@ async function displayUser(req: Request, res: Response): Promise<void> {
     return;
   }
 
+  const { userId, userName, displayName, email } = foundUser;
+
   console.log('successfully retrieved user');
-  res.status(200).json(foundUser);
+  res.status(200).json({ userId, userName, displayName, email });
   return;
 }
 

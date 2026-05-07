@@ -5,14 +5,14 @@
   import { toast } from '$lib/toast.svelte';
 
   let email = $state('');
-  let password = $state('');
+  let passToHash = $state('');
   let submitting = $state(false);
 
   async function handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     submitting = true;
 
-    const result = await api.post('/login', { email: email, passToHash: password });
+    const result = await api.post('/login', { email, passToHash });
 
     submitting = false;
 
@@ -44,7 +44,7 @@
 
   <label>
     Password
-    <input type="password" bind:value={password} required />
+    <input type="password" bind:value={passToHash} required />
   </label>
 
   <button type="submit" disabled={submitting}>

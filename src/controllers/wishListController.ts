@@ -141,7 +141,7 @@ async function addGameToWish(req: Request, res: Response): Promise<void> {
 }
 
 async function removeGameFromWish(req: Request, res: Response): Promise<void> {
-  const { userId } = req.params as Record<string, string>; //Need to ask Saldivar about this
+  const { userId } = req.params as Record<string, string>;
   const gameId = GetGameSchema.safeParse(req.body);
 
   if (!userId) {
